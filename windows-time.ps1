@@ -1,17 +1,10 @@
-# Run as Administrator
+# Fix Windows 11 Time Sync Issue
+# Save this as windows-time.ps1 and run in two parts
 
-Write-Host "Restarting Windows Time service..." -ForegroundColor Cyan
-Stop-Service w32time -Force
-Start-Service w32time
+Write-Host "Step 1: Restarting Windows Time service..." -ForegroundColor Cyan
+Stop-Service w32time -Force -ErrorAction SilentlyContinue
 
-Write-Host "Re-registering time service..." -ForegroundColor Cyan
+Write-Host "Step 2: Unregistering the time service..." -ForegroundColor Cyan
 w32tm /unregister
-w32tm /register
-Start-Service w32time
 
-Write-Host "Manually syncing time from NTP server..." -ForegroundColor Cyan
-w32tm /config /update /manualpeerlist:"time.windows.com" /syncfromflags:manual /reliable:YES
-w32tm /resync /force
-
-Write-Host "Current system time:" -ForegroundColor Green
-Get-Date
+Write-Host "⚠️ The service is now marked for deletion. Please close PowerShell and run Step 2 script after reopening." -ForegroundColor Yellow
