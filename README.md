@@ -10,6 +10,9 @@
 
 ----
 
+
+### 🔹 Step 1: Un-register windows time
+
 ````markdown
 # 🕒 Windows 11 Time Sync Fix (PowerShell Script)
 
