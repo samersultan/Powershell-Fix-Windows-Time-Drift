@@ -1,5 +1,7 @@
 # Fix Windows Time PowerShell Script
 
+> **_NOTE:_**  Script is WIP
+
 
 ````markdown
 # 🕒 Windows 11 Time Sync Fix (PowerShell Script)
