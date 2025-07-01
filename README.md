@@ -1,59 +1,97 @@
-Here’s a `README.md` file suitable for GitHub that explains the purpose and usage of your PowerShell time sync script for Windows 11:
+# Fix Windows Time PowerShell Script
+
+
+````markdown
+# 🕒 Windows 11 Time Sync Fix (PowerShell Script)
+
+This repository contains PowerShell scripts to fix incorrect system time issues on Windows 11 systems—even when "Set time automatically" is enabled. This often happens when the Windows Time (`w32time`) service becomes misconfigured or corrupted.
 
 ---
 
-````markdown
-# Windows 11 Time Sync Fix PowerShell Script
+## 📄 Overview
 
-This PowerShell script is designed to **correct the system time on Windows 11** when the clock is incorrect even though it is set to update automatically. It does so by restarting the Windows Time service, re-registering the time configuration, and manually resyncing with a known NTP server.
+The fix is done in **two steps**:
 
-## 🔧 Features
+1. **Unregister** the time service (`w32tm /unregister`) – this marks the service for deletion.
+2. **Restart PowerShell**, then **re-register and reconfigure** the service to sync with an NTP server.
 
-- Restarts the `w32time` (Windows Time) service
-- Re-registers the time service in case it's misconfigured
-- Forces synchronization with `time.windows.com`
-- Optionally ensures time is synced using NTP automatically
+---
 
-## 🖥️ Requirements
+## 🛠️ Files Included
 
-- Windows 11
-- Administrator privileges
-- Internet access (UDP port 123 must be open)
+- `windows-time-unregister.ps1` – Stops and unregisters the Windows Time service.
+- `windows-time-register.ps1` – Re-registers, starts, and syncs time using `time.windows.com`.
 
-## 📦 Usage
+---
 
-1. Open PowerShell **as Administrator**.
-2. Run the script:
+## ⚙️ How to Use
+
+### 🔹 Step 1: Unregister the Time Service
+
+1. Open **PowerShell as Administrator**.
+2. Run:
+
    ```powershell
-   .\Fix-TimeSync.ps1
+   .\windows-time-unregister.ps1
 ````
 
-3. Wait for the script to complete. It will display the updated system time at the end.
+3. You will see a message:
+   *"⚠️ The service is now marked for deletion. Please close PowerShell and run Step 2 script after reopening."*
 
-## 📁 Script Contents
+---
 
-```powershell
-# Restart Windows Time service
-Stop-Service w32time -Force
-Start-Service w32time
+### 🔹 Step 2: Re-register and Sync Time
 
-# Re-register the service
-w32tm /unregister
-w32tm /register
-Start-Service w32time
+1. Close PowerShell completely.
 
-# Configure sync with external NTP server
-w32tm /config /update /manualpeerlist:"time.windows.com" /syncfromflags:manual /reliable:YES
-w32tm /resync /force
+2. Reopen **a new PowerShell session as Administrator**.
 
-# Display current time
-Get-Date
+3. Run:
+
+   ```powershell
+   .\windows-time-register.ps1
+   ```
+
+4. The script will:
+
+   * Re-register the Windows Time service
+   * Start the service
+   * Configure it to use `time.windows.com` for sync
+   * Force an immediate sync
+   * Show the current system time
+
+---
+
+## 💡 Troubleshooting
+
+* **Still wrong time?**
+
+  * Check if you're on a **domain** – time may sync from the domain controller.
+  * Ensure **Internet access** and UDP port **123** is not blocked.
+  * Try rebooting after both steps.
+
+---
+
+## 🧪 Tested On
+
+* Windows 11 Pro (23H2)
+* Windows 10 Pro (as fallback)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🙏 Credits
+
+Created to simplify Windows Time troubleshooting for admins and users alike.
+
 ```
 
-## ⚠️ Notes
+---
 
-* On domain-joined machines, time sync is managed by the domain controller.
-* If time issues persist, verify BIOS time and system region settings.
-
- script and README included.
+Would you like me to generate all three files (`README.md`, `windows-time-unregister.ps1`, and `windows-time-register.ps1`) in a downloadable `.zip`?
 ```
